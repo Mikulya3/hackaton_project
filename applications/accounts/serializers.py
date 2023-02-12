@@ -1,4 +1,8 @@
+import json
+
 from django.contrib.auth import get_user_model, authenticate
+from django.http import HttpResponseBadRequest
+
 from rest_framework import serializers
 
 from django.utils.translation import gettext_lazy as _
@@ -14,55 +18,40 @@ except ImportError:
 
 User = get_user_model()
 
-class RegisterSerializer(serializers.ModelSerializer):
 
-    name = serializers.CharField(required=True, allow_blank=False, max_length=100)
+class RegisterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(required=True, allow_blank=False, max_length=100)
     email = serializers.EmailField(required=True)
     experience = serializers.CharField(required=True, max_length=20)
     is_mentor = serializers.BooleanField(required=True)
-    password1 = serializers.CharField(write_only=True)
-    password2 = serializers.CharField(write_only=True)
-
+    password = serializers.CharField(required=True, min_length=6)
+    password2 = serializers.CharField(required=True, min_length=6)
     class Meta:
         model = User
-        fields = ['email', 'name', 'experience', 'is_mentor', 'password1', 'password2']
+        fields = ['email','username', 'experience', 'is_mentor', 'password', 'password2']
 
-    def validate_fullname(self, fullname):
-        fullname = fullname.split()
-        if len(fullname) <= 1:
-            raise serializers.ValidationError(
-                _('Kindly enter more than one name.'), )
-        for i in fullname:
-            if len(i) < 2:
-                raise serializers.ValidationError(_('Kindly give us your full name.'), )
-        return fullname
 
-    def get_cleaned_data(self):
-        return {
-            'name': self.validated_data.get('name', ''),
-            'password1': self.validated_data.get('password1', ''),
-            'email': self.validated_data.get('email', ''),
-        }
+    # def validate_email(self, email):
+    #     print(email)
+    #     return email
 
-    def validate(self, data):
-        fullname = data['name'].split()
-        if len(fullname) <= 1:
-            raise serializers.ValidationError(
-                _('Kindly enter more than one name.'), )
-        for i in fullname:
-            if len(i) < 2:
-                raise serializers.ValidationError(
-                    _('Kindly give us your full name.'), )
-        return data
-
-    def validate_password(self, attrs):
+    def validate(self, attrs):
         p1 = attrs.get('password')
         p2 = attrs.pop('password2')
 
         if p1 != p2:
             raise serializers.ValidationError('Пароли не совпадают!')
+
         return attrs
 
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+
+        code = user.activation_code
+
+        send_confirmation_code.delay(user.email, code)
+
+        return user
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
@@ -75,7 +64,7 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
-        user = authenticate(username=email,
+        user = authenticate(username=name,
                             password=password)
         if not user:
             raise serializers.ValidationError('Неверный email или пароль')
