@@ -1,7 +1,5 @@
-
 from django.urls.conf import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 from .views import (RegisterApiView, ChangePasswordApiView, ActivationApiView, ForgotPasswordAPIView,
                     ForgotPasswordCompleteAPIView, TeachingViewSet, ClassRoomViewSet)
 

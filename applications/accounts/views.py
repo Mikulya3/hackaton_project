@@ -63,7 +63,7 @@ class TeachingViewSet(viewsets.ModelViewSet):
     serializer_class = TeachingSerializer
 
 class ClassRoomViewSet(viewsets.ModelViewSet):
-    queryset = Teaching.objects.all()
+    queryset = ClassRoom.objects.all()
     serializer_class = ClassRoomSerializer
 
 

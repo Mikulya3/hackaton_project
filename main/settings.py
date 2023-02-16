@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -60,7 +60,6 @@ INSTALLED_APPS = [
 
 ]
 
-STRIPE_SECRET_KEY_TEST='sk_test_51MZiEJJdHvJLETm1d2zZZhIvt6A7DMeXqpK299ztHkH7szaIGK23Ju5QfZjrQeZieaep4L0oZBzTUiwdsPa3vpbW00aW2TAUBU'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -158,7 +157,7 @@ SWAGGER_SETTINGS = {
         'api_key': {
             'type': 'apiKey',
             'in': 'header',
-            'name': 'Authorization'
+            'name': 'Authorizatiosudo uo -n'
         }
     }
 }

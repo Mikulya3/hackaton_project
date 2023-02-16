@@ -1,20 +1,7 @@
-import json
-
 from django.contrib.auth import get_user_model, authenticate
-from django.http import HttpResponseBadRequest
-
 from rest_framework import serializers
-
-from django.utils.translation import gettext_lazy as _
-
 from applications.accounts.models import Teaching, ClassRoom
 from applications.accounts.tasks import send_confirmation_code
-
-try:
-    from allauth.account import app_settings as allauth_settings
-    from allauth.account.utils import setup_user_email
-except ImportError:
-    raise ImportError('allauth needs to be added to INSTALLED_APPS.')
 
 User = get_user_model()
 
@@ -28,12 +15,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(required=True, min_length=6)
     class Meta:
         model = User
-        fields = ['email','username', 'experience', 'is_mentor', 'password', 'password2']
-
-
-    # def validate_email(self, email):
-    #     print(email)
-    #     return email
+        fields = ['email', 'username', 'experience', 'is_mentor', 'password', 'password2']
 
     def validate(self, attrs):
         p1 = attrs.get('password')
@@ -52,24 +34,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         send_confirmation_code.delay(user.email, code)
 
         return user
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True)
-
-    def validate_email(self, email):
-        if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Пользователь не зарегистрирован')
-        return email
-
-    def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
-        user = authenticate(username=name,
-                            password=password)
-        if not user:
-            raise serializers.ValidationError('Неверный email или пароль')
-        attrs['user'] = user
-        return attrs
 
 
 class ChangePasswordSerializer(serializers.Serializer):
