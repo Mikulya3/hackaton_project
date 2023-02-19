@@ -10,13 +10,8 @@ class UserPayment(models.Model):
 	payment_bool = models.BooleanField(default=False)
 	stripe_checkout_id = models.CharField(max_length=500)
 
-	class Meta:
-		app_label = 'myapp'
-
 
 @receiver(post_save, sender=User)
 def create_user_payment(sender, instance, created, **kwargs):
 	if created:
 		UserPayment.objects.create(app_user=instance)
-
-

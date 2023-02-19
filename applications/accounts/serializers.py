@@ -1,7 +1,7 @@
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from applications.accounts.models import Teaching, ClassRoom
-from applications.accounts.tasks import send_confirmation_code
+from applications.accounts.models import Teaching, ClassRoom, CustomUser
+from applications.accounts.tasks import send_confirmation_code, send_confirmation_email
 
 User = get_user_model()
 
@@ -26,15 +26,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return attrs
 
+
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-
-        code = user.activation_code
-
-        send_confirmation_code.delay(user.email, code)
-
+        user.create_activation_code()  # generate and save the activation code
+        send_confirmation_email(user.email, user.activation_code)
         return user
-
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)

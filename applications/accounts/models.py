@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
@@ -105,6 +107,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     password = models.SlugField('password', max_length=100)
     experience = models.CharField('experience', max_length=50,default=0)
     is_mentor = models.BooleanField('is_mentor', default=False)
+    activation_code = models.CharField(max_length=40,blank=True)
 
 
     objects = UserManager()
@@ -116,4 +119,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+    def __str__(self):
+        return self.email
 
+    def create_activation_code(self):
+        import uuid
+        code = str(uuid.uuid4())
+        self.activation_code = code
+        self.save()

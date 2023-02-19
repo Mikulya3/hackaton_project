@@ -42,19 +42,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-
     #librarys
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
     'djoser',
     'rest_framework_simplejwt',
-    'rest_framework.authtoken',
     'dj_rest_auth',
     'drf_yasg',
+
     # app
     'applications.stripe',
     'applications.app_users',
     'applications.accounts',
+    'applications.course',
+
     # 'applications.stripe.apps.StripeConfig',
 
 
@@ -127,7 +129,6 @@ REST_FRAMEWORK = {
 
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -168,6 +169,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
+
 DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SEND_ACTIVATION_EMAIL': True,
@@ -199,3 +201,6 @@ STRIPE_WEBHOOK_SECRET_TEST = config('STRIPE_WEBHOOK_SECRET_TEST')
 PRODUCT_PRICE = config('PRODUCT_PRICE')
 
 REDIRECT_DOMAIN = 'http://127.0.0.1:8000'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR/'media/'

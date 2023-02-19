@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -72,5 +70,3 @@ def stripe_webhook(request):
 		user_payment.payment_bool = True
 		user_payment.save()
 	return HttpResponse(status=200)
-
-

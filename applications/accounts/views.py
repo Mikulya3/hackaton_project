@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
-from requests import Response
+from rest_framework.response import Response
 from rest_framework import status, viewsets
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .models import Teaching,ClassRoom
@@ -16,7 +15,11 @@ class RegisterApiView(APIView):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response('регистрация прошла успешно!')
+        message = 'Вы успешно зарегистрировались.\n Вам отправлено письмо с активацией'
+        return Response({'message': message})
+
+
+
 class ChangePasswordApiView(APIView):
     permission_classes = [IsAuthenticated]
 
