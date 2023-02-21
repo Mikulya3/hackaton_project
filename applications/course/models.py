@@ -46,7 +46,7 @@ class Course(models.Model):
     currency = models.CharField(max_length=3, default='USD')
 
     def __str__(self):
-        return self.title, self.description, self.lang.name, self.level
+        return self.title
 
 
 class CourseItem(models.Model):
