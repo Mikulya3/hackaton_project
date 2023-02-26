@@ -13,6 +13,7 @@ Stripe
 gitlab
 Python
 CRUD
+filter, search
 
 
 Setup on Development: docker-compose up --build
