@@ -1,5 +1,5 @@
 import uuid
-
+from django.db.models import Q
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
@@ -10,7 +10,9 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserQuerySet(models.QuerySet):
-    pass
+    def search_by_name(self, search_term):
+        return self.filter(Q(username__icontains=search_term) | Q(email__icontains=search_term))
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -60,7 +62,8 @@ class UserManager(BaseUserManager):
 
         return self._create_user(username, email, password, **extra_fields)
 
-
+    def search_by_name(self, search_term):
+        return self.get_queryset().search_by_name(search_term)
 
 
     def __str__(self):
@@ -107,7 +110,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     password = models.SlugField('password', max_length=100)
     experience = models.CharField('experience', max_length=50,default=0)
     is_mentor = models.BooleanField('is_mentor', default=False)
-    activation_code = models.CharField(max_length=40,blank=True)
+    activation_code = models.CharField(max_length=40, blank=True)
+
 
 
     objects = UserManager()

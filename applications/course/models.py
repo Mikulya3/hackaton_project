@@ -39,7 +39,7 @@ class Course(models.Model):
     description = models.TextField(max_length=200, blank=True, null=True)
     lang = models.CharField(max_length=3, choices=LANGUAGES)
     level = models.CharField(max_length=3, choices=[(level.value, level.name) for level in Level])
-    sub_category= models.IntegerField(blank=True,null=True)
+    sub_category = models.IntegerField(blank=True,null=True)
     image = models.ImageField(upload_to='image/')
     video = models.FileField(upload_to='video/', blank=False,null=True)
     price = models.DecimalField(max_digits=19, decimal_places=10, default=0)

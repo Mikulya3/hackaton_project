@@ -11,12 +11,15 @@ User = get_user_model()
 
 
 class RegisterApiView(APIView):
+
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         message = 'Вы успешно зарегистрировались.\n Вам отправлено письмо с активацией'
         return Response({'message': message})
+
+
 
 
 
