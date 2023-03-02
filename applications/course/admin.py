@@ -5,3 +5,5 @@ admin.site.register(Category)
 admin.site.register(Course)
 admin.site.register(CourseItem)
 admin.site.register(CourseItemFile)
+
+

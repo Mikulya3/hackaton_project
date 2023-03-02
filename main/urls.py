@@ -37,5 +37,6 @@ urlpatterns = [
     path('stripe_auth/', include('applications.app_users.urls')),
     path('auth/', include('djoser.urls')),
     path('auth-djoser/', include('djoser.urls.jwt')),
+    path('favorite/', include('applications.favorite.urls')),
 
 ]

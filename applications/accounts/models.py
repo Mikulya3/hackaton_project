@@ -20,7 +20,7 @@ class UserManager(BaseUserManager):
     def get_queryset(self):
         return UserQuerySet(self.model, using=self._db)
 
-    def _create_user(self, username=None, email=None, password=None, **extra_fields):
+    def _create_user(self, username, email, password, **extra_fields):
         if not email:
             raise ValueError(_("Users must have an email address"))
 
@@ -42,25 +42,22 @@ class UserManager(BaseUserManager):
         username = ' '.join(map(str, fullname))
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
+        user.create_activation_code()
         user.save(using=self._db)
         return user
 
-    def create_user(self, username, email=None, password=None, **extra_fields):
+    def create_user(self, username=None, email=None, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(username, email, password, **extra_fields)
-
 
     def create_superuser(self, username, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Admin must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Admin must have is_superuser=True.')
-
         return self._create_user(username, email, password, **extra_fields)
+
 
     def search_by_name(self, search_term):
         return self.get_queryset().search_by_name(search_term)
@@ -104,9 +101,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), unique=True, max_length=255)
     email = models.EmailField(_('email'), unique=True, null=True, blank=True)
     is_active = models.BooleanField(_('active'), default=False)
-    is_staff = models.BooleanField(_('staff'), default=False)
+    is_staff = models.BooleanField(default=False)
     is_verified = models.BooleanField(_('verified'), default=False)
-    type = models.CharField('type', max_length=100,default=True)
+    type = models.CharField('type', max_length=100, default=True)
     password = models.SlugField('password', max_length=100)
     experience = models.CharField('experience', max_length=50,default=0)
     is_mentor = models.BooleanField('is_mentor', default=False)
