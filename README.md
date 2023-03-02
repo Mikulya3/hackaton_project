@@ -14,6 +14,7 @@ gitlab
 Python
 CRUD
 filter, search, pagination
+wish_list
 
 
 Setup on Development: docker-compose up --build
