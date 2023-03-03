@@ -18,7 +18,7 @@ class Comment(models.Model):
         return f'{self.course}-{self.comment}'
 
 class Rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rating')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='ratings')
     rating = models.SmallIntegerField(
         validators=[
