@@ -33,6 +33,7 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger')),
     path('accounts/', include('applications.accounts.urls')),
     path('course/', include('applications.course.urls')),
+    path('personal_cabinet/', include('applications.personal_cabinet.urls')),
     path('stripe/', include('applications.stripe.urls')),
     path('stripe_auth/', include('applications.app_users.urls')),
     path('auth/', include('djoser.urls')),

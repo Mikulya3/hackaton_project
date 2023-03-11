@@ -57,9 +57,7 @@ INSTALLED_APPS = [
     'applications.accounts',
     'applications.course',
     'applications.favorite',
-
-    # 'applications.stripe.apps.StripeConfig',
-
+    'applications.personal_cabinet'
 
 ]
 
